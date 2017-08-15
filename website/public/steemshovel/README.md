@@ -1,6 +1,6 @@
-# steemshovel
+# spa
 
-> SteemShovel Site
+> Vue SPA Starter
 
 ## Build Setup
 

@@ -1,23 +1,22 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
+  <div id="app" class="l-app">
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  created: function () {
+    this.$socket.emit('connection', {method: 'get'})
+  },
+  sockets: {
+    'connection': function (val) {
+      console.log('Socket Connected!', val)
+    }
+  },
+  watch: {
+    '$route': 'checkLoggined'
+  }
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
