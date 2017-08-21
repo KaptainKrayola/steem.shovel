@@ -7,6 +7,7 @@ import ResetView from '@/views/Reset'
 import DashView from '@/views/Dash'
 import DashboardView from '@/views/Dashboard'
 import UsersView from '@/views/Users'
+import ProfileView from '@/views/Profile'
 import NotFoundView from '@/views/NotFound'
 
 Vue.use(Router)
@@ -41,6 +42,11 @@ export default new Router({
           path: '',
           name: 'dashboard',
           component: DashboardView
+        },
+        {
+          path: 'profile',
+          name: 'profile',
+          component: ProfileView
         },
         {
           path: 'users',

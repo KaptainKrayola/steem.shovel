@@ -92,6 +92,24 @@
             password: this.regPassword
           })
         })
+      },
+      registeFail (msg) {
+        this.$notify({
+          type: 'danger',
+          title: 'Register Failed!',
+          text: msg,
+          closeable: true,
+          timer: 5000
+        })
+      },
+      registeSuccess () {
+        this.$notify({
+          type: 'success',
+          title: 'Register Success!',
+          text: 'Register was successed!',
+          closeable: true,
+          timer: 5000
+        })
       }
     },
     sockets: {
@@ -100,6 +118,7 @@
         this.isRegistering = false
         this.saveSession(val.body.user.user, 1)
         this.$router.push('/')
+        this.registeSuccess()
       }
     }
   }
