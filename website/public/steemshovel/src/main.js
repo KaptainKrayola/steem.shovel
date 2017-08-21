@@ -15,6 +15,7 @@ Vue.use(VeeValidate)
 Vue.mixin({
   data: function () {
     return {
+      searchFilter: ''
     }
   },
   methods: {

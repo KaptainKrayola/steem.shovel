@@ -63,13 +63,15 @@
     methods: {
       submit () {
         if (event) event.preventDefault()
-        this.$validator.validateAll('login-form').then(() => {
-          this.isLoggingIn = true
-          this.$socket.emit('security/login', {
-            method: 'post',
-            email: this.loginEmail,
-            password: this.loginPassword
-          })
+        this.$validator.validateAll('login-form').then(v => {
+          if (v) {
+            this.isLoggingIn = true
+            this.$socket.emit('security/login', {
+              method: 'post',
+              email: this.loginEmail,
+              password: this.loginPassword
+            })
+          }
         })
       },
       loginFail () {

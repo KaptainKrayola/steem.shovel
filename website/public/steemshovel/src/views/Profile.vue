@@ -2,14 +2,23 @@
   <div>
     <div class="c-toolbar u-mb-0">
       <div class="l-container">
-        <ol class="c-breadcrumb">
-          <li class="c-breadcrumb__item">
-              <a href="#" class="c-breadcrumb__link">Home</a>
-          </li>
-          <li class="c-breadcrumb__item">
-            <router-link to="/users" class="c-breadcrumb__link">Profile</router-link>
-          </li>
-        </ol>
+        <div class="l-level">
+            <div class="l-level__left">
+                <ol class="c-breadcrumb">
+                    <li class="c-breadcrumb__item">
+                        <a href="#" class="c-breadcrumb__link">Home</a>
+                    </li>
+                    <li class="c-breadcrumb__item">
+                        <router-link to="/users" class="c-breadcrumb__link">Profile</router-link>
+                    </li>
+                </ol>
+            </div>
+            <div class="l-level__right">
+                <div class="l-level__item">
+                    <search-header></search-header>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
     <main class="l-app__main" role="main">
@@ -21,7 +30,7 @@
                     <div class="c-panel__body">
                         <div class="u-textCenter">
                             <div class="avatar avatar--xl u-mb-10">
-                                <i class="icon-user u-fs-128"></i>
+                                <i class="icon-user-tie u-fs-128"></i>
                             </div>
                             <div class="u-fs-16">{{fullName}}</div>
                             <div>{{email}}</div>
@@ -49,7 +58,7 @@
             <div class="l-col-8@md l-col-8@lg">
                 <tabs active-key="general" type="cards">
                     <tab-pane label="General" name="general">
-                        <form class="form-horizontal" @submit="submit" id="profileForm" action="#" method="post" data-vv-scope="profile-form">
+                        <form @submit="submit" id="profileForm" action="#" method="post" data-vv-scope="profile-form" class="form-horizontal">
                             <div class="form-group l-row">
                                 <label class="form-label l-col-12 l-col-fixed@md u-w-220">Full Name</label>
                                 <div class="form-content l-col@md">
@@ -123,7 +132,7 @@
                             <div class="form-group l-row">
                                 <label class="form-label l-col-12 l-col-fixed@md u-w-220"></label>
                                 <div class="form-content l-col@md">
-                                    <button class="btn btn--primary btn--smart">Update</button>
+                                    <button v-bind:class="{ 'btn btn--primary btn--smart' : true, 'is-loading': isUpdate }" >Update</button>
                                 </div>
                             </div>
                             <!-- END .form-group -->
@@ -140,64 +149,80 @@
 </template>
 
 <script>
-  export default {
-    name: 'ProfileView',
-    data: function () {
-      return {
-        userGUID: localStorage.getItem('userGUID'),
-        fullName: localStorage.getItem('fullName'),
-        email: localStorage.getItem('email'),
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-        errorMsg: ''
-      }
-    },
-    methods: {
-      submit () {
-        if (event) event.preventDefault()
-        this.$validator.validateAll('profile-form').then(v => {
-          this.$socket.emit('users/updateProfile', {
-            method: 'post',
-            userGUID: this.userGUID,
-            fullName: this.fullName,
-            email: this.email,
-            password: this.password,
-            newPassword: this.newPassword
+    import SearchHeader from '../components/SearchHeader.vue'
+
+    export default {
+      name: 'ProfileView',
+      components: {
+        searchHeader: SearchHeader
+      },
+      data: function () {
+        return {
+          userGUID: localStorage.getItem('userGUID'),
+          fullName: localStorage.getItem('fullName'),
+          email: localStorage.getItem('email'),
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+          errorMsg: '',
+          isUpdate: false
+        }
+      },
+      methods: {
+        submit () {
+          if (event) event.preventDefault()
+          this.$validator.validateAll('profile-form').then(v => {
+            if (v) {
+              this.isUpdate = true
+              this.$socket.emit('users/updateProfile', {
+                method: 'post',
+                userGUID: this.userGUID,
+                fullName: this.fullName,
+                email: this.email,
+                password: this.currentPassword,
+                newPassword: this.newPassword
+              })
+            }
           })
-        })
+        },
+        updateFail (msg) {
+          this.$notify({
+            type: 'danger',
+            title: 'Update Failed!',
+            text: msg,
+            closeable: true,
+            timer: 5000
+          })
+        },
+        updateSuccess () {
+          this.$notify({
+            type: 'success',
+            title: 'Update Success!',
+            text: 'Profile Updating was successed!',
+            closeable: true,
+            timer: 5000
+          })
+        }
       },
-      updateFail (msg) {
-        this.$notify({
-          type: 'danger',
-          title: 'Update Failed!',
-          text: msg,
-          closeable: true,
-          timer: 5000
-        })
-      },
-      updateSuccess () {
-        this.$notify({
-          type: 'success',
-          title: 'Update Success!',
-          text: 'Profile Updating was successed!',
-          closeable: true,
-          timer: 5000
-        })
-      }
-    },
-    sockets: {
-      'users/updateProfile': function (val) {
-        if (val.body.err === null) {
-          localStorage.setItem('fullName', this.fullName)
-          localStorage.setItem('email', this.email)
-          localStorage.setItem('password', this.newPassword)
-          this.updateSuccess()
-        } else {
-          this.errorMsg = val.body.err
-          this.updateFail(this.errorMsg)
+      sockets: {
+        'users/updateProfile': function (val) {
+          if (val.body.err === null) {
+            localStorage.setItem('fullName', this.fullName)
+            localStorage.setItem('email', this.email)
+            localStorage.setItem('password', this.newPassword)
+            this.currentPassword = ''
+            this.newPassword = ''
+            this.confirmPassword = ''
+            this.errorMsg = ''
+            this.errors.clear('profile-form')
+            this.saveSession(val.body.user.user, 1)
+            this.updateSuccess()
+          } else {
+            this.errorMsg = val.body.err
+            this.updateFail(this.errorMsg)
+          }
+          this.isUpdate = false
         }
       }
     }
-  }
 </script>

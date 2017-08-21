@@ -24,18 +24,8 @@
                         <drop-content slot="content">
                             <ul class="c-nav c-nav--menus">
                                 <li class="c-nav__item">
-                                    <router-link to="/login" class="c-menu__link">
-                                        <div class="c-menu__text">Login</div>
-                                    </router-link>
-                                </li>
-                                <li class="c-nav__item">
-                                    <router-link to="/register" class="c-menu__link">
-                                        <div class="c-menu__text">Register</div>
-                                    </router-link>
-                                </li>
-                                <li class="c-nav__item">
-                                    <router-link to="/forgot" class="c-menu__link">
-                                        <div class="c-menu__text">Forgot</div>
+                                    <router-link to="/profile" class="c-menu__link">
+                                        <div class="c-menu__text">Profile</div>
                                     </router-link>
                                 </li>
                                 <li class="c-nav__item">
@@ -70,7 +60,7 @@ export default {
 </script>
 
 <style scoped>
-    .router-link-exact-active {
+    .c-navbar .router-link-exact-active {
         color: white;
         font-weight: 700;
     }

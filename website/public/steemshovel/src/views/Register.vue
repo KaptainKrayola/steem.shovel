@@ -84,13 +84,15 @@
       submit () {
         if (event) event.preventDefault()
         this.$validator.validateAll('register-form').then(v => {
-          this.isRegistering = true
-          this.$socket.emit('users/registerUser', {
-            method: 'post',
-            fullName: this.regFullName,
-            email: this.regEmail,
-            password: this.regPassword
-          })
+          if (v) {
+            this.isRegistering = true
+            this.$socket.emit('users/registerUser', {
+              method: 'post',
+              fullName: this.regFullName,
+              email: this.regEmail,
+              password: this.regPassword
+            })
+          }
         })
       },
       registeFail (msg) {
