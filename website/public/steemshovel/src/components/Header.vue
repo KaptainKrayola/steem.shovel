@@ -13,7 +13,6 @@
                     </a>                    
                     <router-link to="/" class="c-navbar__item u-hiddenDown@sm"><i class="icon-grid u-mr-5"></i>Dashboard</router-link>
                     <router-link to="/profile" class="c-navbar__item u-hiddenDown@sm"><i class="icon-user u-mr-5"></i>Profile</router-link>
-                    <router-link to="/users" class="c-navbar__item u-hiddenDown@sm"><i class="icon-files-empty u-mr-5"></i>Page</router-link>
                 </div>
                 <div class="c-navbar__right">
                     <drop class="c-navbar__item">

@@ -31,6 +31,9 @@ Vue.mixin({
       if (allowedPaths.indexOf(path) >= 0) {
         needAuthenticate = false
       }
+      if (path !== '/search') {
+        localStorage.setItem('search', '')
+      }
       if (!needAuthenticate) {
         return true
       }

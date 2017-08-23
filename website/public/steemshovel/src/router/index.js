@@ -6,7 +6,8 @@ import ForgotView from '@/views/Forgot'
 import ResetView from '@/views/Reset'
 import DashView from '@/views/Dash'
 import DashboardView from '@/views/Dashboard'
-import UsersView from '@/views/Users'
+// import UsersView from '@/views/Users'
+import SearchView from '@/views/Search'
 import ProfileView from '@/views/Profile'
 import NotFoundView from '@/views/NotFound'
 
@@ -49,9 +50,9 @@ export default new Router({
           component: ProfileView
         },
         {
-          path: 'users',
-          name: 'users',
-          component: UsersView
+          path: 'search',
+          name: 'search',
+          component: SearchView
         }
       ]
     },
